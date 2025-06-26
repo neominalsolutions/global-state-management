@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useContext, useEffect, useState } from 'react';
-import { CounterContext } from '../context/counter';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { increase } from '../../store/slices/counter.slice';
+import { type AppDispatch, type RootState } from '../../store/store';
 
 const CounterView = () => {
 	// değişen state değerini okumak için state bağlandık.
-	const { state } = useContext(CounterContext) as any;
+	const state = useSelector((rootState: RootState) => rootState.counterState);
 
 	return (
 		<>
@@ -15,8 +16,8 @@ const CounterView = () => {
 };
 
 const CounterActions = () => {
-	const { state, increase } = useContext(CounterContext) as any;
-	// global state değiştirmek için increase function çağırdım
+	const dispatch = useDispatch<AppDispatch>(); // action tetiklemek için kullanılan hook
+	const state = useSelector((rootState: RootState) => rootState.counterState); // state okumak için kullanılan hook
 
 	// her state değişiminde tetiklensin
 	useEffect(() => {
@@ -25,14 +26,20 @@ const CounterActions = () => {
 
 	return (
 		<div style={{ padding: 20 }}>
-			<button onClick={increase}>(+)</button>
+			<button
+				onClick={() => {
+					dispatch(increase());
+				}}
+			>
+				(+)
+			</button>
 			<button>(-)</button>
 			<button>(0)</button>
 		</div>
 	);
 };
 
-function CounterPage() {
+function CounterPageV2() {
 	const [indexState, setIndexState] = useState(1);
 	const onTabChange = (index: number) => {
 		setIndexState(index);
@@ -46,12 +53,10 @@ function CounterPage() {
 				<button onClick={() => onTabChange(2)}>Tab-2</button>
 			</div>
 
-			{/* <CounterProvider> */}
 			{indexState === 1 && <CounterView />}
 			{indexState === 2 && <CounterActions />}
-			{/* </CounterProvider> */}
 		</>
 	);
 }
 
-export default CounterPage;
+export default CounterPageV2;

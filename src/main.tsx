@@ -8,9 +8,12 @@ import {
 	RouterProvider,
 } from 'react-router';
 import './App.css';
-import CounterPage from './components/page.tsx';
 import { CounterContext, CounterProvider } from './context/counter.tsx';
 import './index.css';
+import { Provider } from 'react-redux';
+import { store } from './store/store.ts';
+import CounterPage from './pages/counter-contextapi/page.tsx';
+import CounterPageV2 from './pages/counter-redux/page.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -19,6 +22,8 @@ const router = createBrowserRouter([
 			return (
 				<div>
 					<Link to="/context-api">Context API Demo</Link>
+					{ ' | ' }
+					<Link to="/redux-api">Redux API Demo</Link>
 					<Outlet />
 				</div>
 			);
@@ -41,11 +46,17 @@ const router = createBrowserRouter([
 					);
 				},
 			},
+			{
+				path: '/redux-api',
+				Component: CounterPageV2,
+			},
 		],
 	},
 ]);
 createRoot(document.getElementById('root')!).render(
-	<CounterProvider>
-		<RouterProvider router={router} />
-	</CounterProvider>
+	<Provider store={store}>
+		<CounterProvider>
+			<RouterProvider router={router} />
+		</CounterProvider>
+	</Provider>
 );
