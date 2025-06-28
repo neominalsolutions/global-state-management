@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { CounterReducer } from './slices/counter.slice';
+import { ProductReducer } from './slices/product.slice';
 
 // store hangi tip stateler ile çalıştığını anlamak için reducer'ları conbine ediyor.
 export const store = configureStore({
 	reducer: {
 		counterState: CounterReducer,
+		productState: ProductReducer,
 	},
 });
 
