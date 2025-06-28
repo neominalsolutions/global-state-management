@@ -13,14 +13,12 @@ interface Product {
 	ProductName: string;
 	ProductID: number;
 }
-
-// Asenkron veri
 export type ProductState = {
+	// Asenkron veri
 	loading: boolean; // yükleme anı
 	data: Product[]; // veri çekildiyse
-	error: any | undefined; // hata durumunda
+	error: any; // hata durumunda
 };
-
 // ilk veri yükleme asenkron br şekilde olmalı
 // redux da asnyc işlemler thunk middleware ile yapılır.
 export const fetchProductApi = createAsyncThunk('Products_FETCH', async () => {
@@ -28,11 +26,15 @@ export const fetchProductApi = createAsyncThunk('Products_FETCH', async () => {
 		'https://services.odata.org/v4/northwind/northwind.svc/Products'
 	);
 	const data = response.data;
+
+	// return await Promise.reject({
+	// 	status: 500,
+	// 	message: 'Beklemedik bir hata meydana geldi!',
+	// });
+
 	return data;
 });
-
 // Promise ile pending anı, rejected anı ve fullfilled anı gibi durumları yakalayabiliriz.
-
 const initState: ProductState = { data: [], error: null, loading: false };
 // asenkron olarak veri çekme işlemlerinde extraReducers kullanırız.
 
@@ -44,21 +46,27 @@ const productSlice = createSlice({
 		builder.addCase(fetchProductApi.pending, (state: ProductState) => {
 			// verinin yükleneme anı
 			state.loading = true;
+			state.data = [];
 		});
-		builder.addCase(
-			fetchProductApi.rejected,
-			(state: ProductState, action: PayloadAction<any>) => {
-				// action: PayloadAction<any> eror state olarak gelicektir.
-				state.error = action.payload;
-				state.loading = false;
-			}
-		);
 		builder.addCase(
 			fetchProductApi.fulfilled,
 			(state: ProductState, action: PayloadAction<any>) => {
 				// action: PayloadAction<any> eror state olarak gelicektir.
+
+				console.log('action', action);
+
 				state.error = null;
-				state.data = [...action.payload];
+				state.data = action.payload.value;
+				state.loading = false;
+			}
+		);
+		builder.addCase(
+			fetchProductApi.rejected,
+			(state: ProductState, action: PayloadAction<any>) => {
+				// action: PayloadAction<any> eror state olarak gelicektir.
+				console.log('error', action.payload);
+				state.error = action.payload;
+				state.data = [];
 				state.loading = false;
 			}
 		);
