@@ -9,6 +9,7 @@ import CounterPage from './pages/counter-contextapi/page.tsx';
 import CounterPageV2 from './pages/counter-redux/page.tsx';
 import { store } from './store/store.ts';
 import ProductPage from './pages/product/page.tsx';
+import CartSummaryPage from './pages/cart/page.tsx';
 
 const router = createBrowserRouter([
 	{
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
 			{
 				path: '/products',
 				Component: ProductPage,
+			},
+			{
+				path: 'cart-summary',
+				Component: CartSummaryPage,
 			},
 		],
 	},

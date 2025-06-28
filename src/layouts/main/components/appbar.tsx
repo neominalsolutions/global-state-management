@@ -14,7 +14,7 @@ export default function MyAppBar() {
 
 				{/* Ortalanmış menü linkleri */}
 				<Box sx={{ display: 'flex', gap: 4 }}>
-					<Link style={{ textDecoration: 'none', color: 'white' }} to="#">
+					<Link style={{ textDecoration: 'none', color: 'white' }} to="/">
 						Home
 					</Link>
 					<Link
@@ -28,7 +28,9 @@ export default function MyAppBar() {
 				{/* Sepet ikonu */}
 				<IconButton color="inherit">
 					<Badge badgeContent={cartCount} color="error">
-						<ShoppingCartIcon />
+						<Link style={{ color: 'white' }} to="/cart-summary">
+							<ShoppingCartIcon />
+						</Link>
 					</Badge>
 				</IconButton>
 			</Toolbar>
