@@ -7,11 +7,13 @@ import {
 	Toolbar,
 	Typography,
 } from '@mui/material';
-import React from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
+import type { RootState } from '../../../store/store';
 
 export default function MyAppBar() {
-	const [cartCount] = React.useState(3); // Örnek sepet verisi
+	// cartState bağlan kaç adet olduğu bilgisi reduxdan çek
+	const cartState = useSelector((rootState: RootState) => rootState.cartState);
 
 	return (
 		<AppBar position="static">
@@ -36,7 +38,7 @@ export default function MyAppBar() {
 
 				{/* Sepet ikonu */}
 				<IconButton color="inherit">
-					<Badge badgeContent={cartCount} color="error">
+					<Badge badgeContent={cartState.items.length} color="error">
 						<Link style={{ color: 'white' }} to="/cart-summary">
 							<ShoppingCartIcon />
 						</Link>

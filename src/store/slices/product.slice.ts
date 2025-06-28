@@ -7,7 +7,7 @@ import {
 } from '@reduxjs/toolkit';
 import axios from 'axios';
 // API çekilen verileri tip olarak interface ile karşılarız.
-interface Product {
+export interface Product {
 	UnitsInStock: number;
 	UnitPrice: number;
 	ProductName: string;
