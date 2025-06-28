@@ -1,3 +1,4 @@
+import { Add, Delete, Remove } from '@mui/icons-material';
 import {
 	Card,
 	CardContent,
@@ -6,36 +7,36 @@ import {
 	IconButton,
 	Typography,
 } from '@mui/material';
-import { Add, Remove, Delete } from '@mui/icons-material';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	addQuantity,
+	deleteItemFromCart,
+	removeQuantity,
+} from '../../store/slices/cart.slice';
+import { type AppDispatch, type RootState } from '../../store/store';
 
 function CartSummaryPage() {
-	const cartItems = [
-		{ name: 'Ürün A', quantity: 1, total: 50 },
-		{ name: 'Ürün B', quantity: 2, total: 80 },
-		{ name: 'Ürün C', quantity: 1, total: 100 },
-	];
+	const cartState = useSelector((rootState: RootState) => rootState.cartState);
+	const dispatch = useDispatch<AppDispatch>();
 
-	const onDelete = (index: number) => {
-		console.log('sil', index);
+	const onItemDelete = (id: number) => {
+		dispatch(deleteItemFromCart({ id }));
 	};
 
-	const onUpdateQuantity = (index: number) => {
-		console.log('update quantity + 1', index);
+	const onAddQuantity = (id: number) => {
+		dispatch(addQuantity({ id }));
 	};
 
-	const onRemove = (index: number) => {
-		console.log('update quantity - 1', index);
+	const onRemoveQuantity = (id: number) => {
+		dispatch(removeQuantity({ id }));
 	};
-
-	const calculateTotal = () =>
-		cartItems.reduce((sum, item) => sum + item.total, 0);
 
 	return (
 		<Container maxWidth="sm" sx={{ mt: 4 }}>
 			<Typography variant="h4" gutterBottom>
 				Sepetim
 			</Typography>
-			{cartItems.map((item, index) => {
+			{cartState.items.map((item, index) => {
 				return (
 					<Card key={index} sx={{ mb: 2 }}>
 						<CardContent>
@@ -44,19 +45,20 @@ function CartSummaryPage() {
 									<Typography>{item.name}</Typography>
 								</Grid>
 								<Grid size={4}>
-									<IconButton onClick={() => onRemove(index)}>
+									<IconButton onClick={() => onRemoveQuantity(item.id)}>
 										<Remove />
 									</IconButton>
 									<Typography component="span">{item.quantity}</Typography>
-									<IconButton onClick={() => onUpdateQuantity(index)}>
+									<IconButton onClick={() => onAddQuantity(item.id)}>
 										<Add />
 									</IconButton>
 								</Grid>
 								<Grid size={3}>
-									<Typography>{item.total} ₺</Typography>
+									{/* birim fiyat */}
+									<Typography>{item.quantity * item.listPrice} ₺</Typography>
 								</Grid>
 								<Grid size={1}>
-									<IconButton onClick={() => onDelete(index)}>
+									<IconButton onClick={() => onItemDelete(item.id)}>
 										<Delete />
 									</IconButton>
 								</Grid>
@@ -67,7 +69,8 @@ function CartSummaryPage() {
 			})}
 
 			<Typography variant="h6" align="right">
-				Sepet Toplamı: {calculateTotal()} ₺
+				{/* toplam fiyat */}
+				Sepet Toplamı: {cartState.total} ₺
 			</Typography>
 		</Container>
 	);

@@ -17,6 +17,7 @@ import type { AppDispatch, RootState } from '../../store/store';
 
 function ProductPage() {
 	const state = useSelector((rootState: RootState) => rootState.productState);
+	const cartState = useSelector((rootState: RootState) => rootState.cartState);
 	const dispatch = useDispatch<AppDispatch>();
 
 	// sepet state bağlanıp veri göndermemiz lazım.
@@ -39,6 +40,13 @@ function ProductPage() {
 			</Box>
 		);
 
+	// ürünler sayfasındaki hangi ürünün sepete eklendiğini arkaplan renginden anlamak için yaptık
+	const selectedItemBgColor = (id: number): string => {
+		const itemExists = cartState.items.find((x) => x.id === id);
+
+		return itemExists ? 'yellow' : '';
+	};
+
 	return (
 		<Box sx={{ padding: 4 }}>
 			<Grid container spacing={3}>
@@ -53,7 +61,9 @@ function ProductPage() {
 								}
 								alt={product.ProductName}
 							/>
-							<CardContent>
+							<CardContent
+								sx={{ bgcolor: selectedItemBgColor(product.ProductID) }}
+							>
 								<Typography variant="h6">{product.ProductName}</Typography>
 								<Typography variant="body2" color="text.secondary">
 									Stok: {product.UnitsInStock}
@@ -62,7 +72,9 @@ function ProductPage() {
 									Fiyat: {product.UnitPrice} TL
 								</Typography>
 							</CardContent>
-							<CardActions>
+							<CardActions
+								sx={{ bgcolor: selectedItemBgColor(product.ProductID) }}
+							>
 								<Button
 									size="small"
 									variant="contained"
