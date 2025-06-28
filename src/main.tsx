@@ -1,33 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext } from 'react';
 import { createRoot } from 'react-dom/client';
-import {
-	createBrowserRouter,
-	Link,
-	Outlet,
-	RouterProvider,
-} from 'react-router';
-import './App.css';
-import { CounterContext, CounterProvider } from './context/counter.tsx';
-import './index.css';
 import { Provider } from 'react-redux';
-import { store } from './store/store.ts';
+import { createBrowserRouter, Link, RouterProvider } from 'react-router';
+import { CounterContext, CounterProvider } from './context/counter.tsx';
+import MainLayout from './layouts/main/layout.tsx';
 import CounterPage from './pages/counter-contextapi/page.tsx';
 import CounterPageV2 from './pages/counter-redux/page.tsx';
+import { store } from './store/store.ts';
+import ProductPage from './pages/product/page.tsx';
 
 const router = createBrowserRouter([
 	{
 		path: '',
-		Component: () => {
-			return (
-				<div>
-					<Link to="/context-api">Context API Demo</Link>
-					{ ' | ' }
-					<Link to="/redux-api">Redux API Demo</Link>
-					<Outlet />
-				</div>
-			);
-		},
+		Component: MainLayout,
 		children: [
 			{ index: true, Component: CounterPage },
 			{
@@ -49,6 +35,10 @@ const router = createBrowserRouter([
 			{
 				path: '/redux-api',
 				Component: CounterPageV2,
+			},
+			{
+				path: '/products',
+				Component: ProductPage,
 			},
 		],
 	},
